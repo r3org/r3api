@@ -64,8 +64,6 @@ class ZingMp3:
         }
         param.update(qs)
         param = urllib.parse.urlencode(param).replace("&", "")
-        print(param)
-
         sig = cls.hashParam(path, param)
         params = {
             "ctime": ctime,
