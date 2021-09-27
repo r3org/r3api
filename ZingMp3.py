@@ -34,7 +34,7 @@ class ZingMp3:
 
     @classmethod
     def getHome(cls, page=1):
-        return cls.requestZing("/api/v2/home", {"page": page})
+        return cls.requestZing("/api/v2/page/get/home", {"page": page})
 
     @classmethod
     def getCookie(cls):
