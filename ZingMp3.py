@@ -12,25 +12,25 @@ class ZingMp3:
 
     @classmethod
     def getFullInfo(cls, id):
-        data = cls.requestZing("/api/v2/song/getInfo", {"id": id})
-        data["streaming"] = cls.requestZing("/api/v2/song/getStreaming", {"id": id})
+        data = cls.requestZing("/api/v2/song/get/info", {"id": id})
+        data["streaming"] = cls.requestZing("/api/v2/song/get/streaming", {"id": id})
         return data
 
     @classmethod
-    def getSectionPlaylist(cls, id):
-        return cls.requestZing("/api/v2/playlist/getSectionBottom", {"id": id})
+    def getRecommendSongs(cls, id):
+        return cls.requestZing("/api/v2/recommend/get/songs", {"id": id})
 
     @classmethod
     def getDetailPlaylist(cls, id):
-        return cls.requestZing("/api/v2/playlist/getDetail", {"id": id})
+        return cls.requestZing("/api/v2/page/get/playlist", {"id": id})
 
     @classmethod
     def getInfoMusic(cls, id):
-        return cls.requestZing("/api/v2/song/getInfo", {"id": id})
+        return cls.requestZing("/api/v2/song/get/info", {"id": id})
 
     @classmethod
     def getStreaming(cls, id):
-        return cls.requestZing("/api/v2/song/getStreaming", {"id": id})
+        return cls.requestZing("/api/v2/song/get/streaming", {"id": id})
 
     @classmethod
     def getHome(cls, page=1):
@@ -68,14 +68,13 @@ class ZingMp3:
         params = {
             "ctime": ctime,
             "sig": sig,
-            "apiKey": cls.api_key,
+            "apiKey": cls.api_key
         }
         params.update(qs)
         r = requests.get(cls.url_api + path, params=params, cookies=cls.cookies)
-        return r.json()["data"]
+        
+        r = r.json()
+        if r["err"] != 0:
+            raise Exception(r["msg"])
 
-
-if __name__ == "__main__":
-    import json
-    r = ZingMp3.getFullInfo("ZWC6DUFW")
-    print(json.dumps(r, indent=4, ensure_ascii=False))
+        return r["data"]
